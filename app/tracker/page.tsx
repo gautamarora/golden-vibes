@@ -209,17 +209,17 @@ export default function Tracker() {
             <div className="flex justify-between items-start mb-2">
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                  {workout.source}
+                  {workout.type}
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(workout.date)}</p>
               </div>
               <span className="text-sm text-gray-600 dark:text-gray-400">{workout.duration} min</span>
             </div>
-            {(workout.type || workout.note) && (
+            {(workout.source || workout.note) && (
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {workout.type && <span className="font-medium">{workout.type}</span>}
-                  {workout.type && workout.note && <span> • </span>}
+                  {workout.source && <span className="font-medium">{workout.source}</span>}
+                  {workout.source && workout.note && <span> • </span>}
                   {workout.note && <span>{workout.note}</span>}
                 </p>
               </div>
