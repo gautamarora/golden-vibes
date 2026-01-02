@@ -11,7 +11,7 @@ interface Workout {
   source: string;
 }
 
-const WORKOUT_TYPES = ['Lift', 'Run', 'Conditioning', 'Yoga', 'Cardio', 'Sport'];
+const APP_SOURCES = ['Oura', 'Whoop', 'Tonal', 'Pvolve', 'Other'];
 
 export default function Tracker() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
@@ -19,9 +19,10 @@ export default function Tracker() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newWorkout, setNewWorkout] = useState({
     date: new Date().toISOString().split('T')[0],
-    type: 'Lift',
+    type: '',
     duration: 60,
     note: '',
+    source: 'Other',
   });
 
   useEffect(() => {
@@ -55,9 +56,10 @@ export default function Tracker() {
         setShowAddForm(false);
         setNewWorkout({
           date: new Date().toISOString().split('T')[0],
-          type: 'Lift',
+          type: '',
           duration: 60,
           note: '',
+          source: 'Other',
         });
         loadWorkouts();
       }
@@ -129,24 +131,37 @@ export default function Tracker() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Type
+                Source
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {WORKOUT_TYPES.map(type => (
+                {APP_SOURCES.map(source => (
                   <button
-                    key={type}
+                    key={source}
                     type="button"
-                    onClick={() => setNewWorkout({ ...newWorkout, type })}
+                    onClick={() => setNewWorkout({ ...newWorkout, source })}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      newWorkout.type === type
+                      newWorkout.source === source
                         ? 'bg-golden text-white'
                         : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-golden'
                     }`}
                   >
-                    {type}
+                    {source}
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Type (optional)
+              </label>
+              <input
+                type="text"
+                value={newWorkout.type}
+                onChange={(e) => setNewWorkout({ ...newWorkout, type: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-golden"
+                placeholder="e.g., Strength Training, Run, HIIT"
+              />
             </div>
 
             <div>
@@ -191,8 +206,15 @@ export default function Tracker() {
         {workouts.map((workout) => (
           <div key={workout.id} className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
             <div className="flex justify-between items-start mb-2">
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white">{workout.type}</h3>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white">
+                    {workout.type || 'Workout'}
+                  </h3>
+                  <span className="text-xs px-2 py-0.5 bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded">
+                    {workout.source}
+                  </span>
+                </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(workout.date)}</p>
               </div>
               <span className="text-sm text-gray-600 dark:text-gray-400">{workout.duration} min</span>
